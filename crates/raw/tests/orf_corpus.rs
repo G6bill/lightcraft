@@ -175,8 +175,8 @@ fn olympus_and_om_sensor_pixels_match_independent_reference() {
         let mut hash = Sha256::new();
         let mut block = [0u8; 8192];
         for chunk in samples.chunks(4096) {
-            for (&sample, out) in chunk.iter().zip(block.chunks_exact_mut(2)) {
-                out.copy_from_slice(&sample.to_le_bytes());
+            for (&sample, out) in chunk.iter().zip(block.as_chunks_mut::<2>().0) {
+                *out = sample.to_le_bytes();
             }
             hash.update(&block[..chunk.len() * 2]);
         }
